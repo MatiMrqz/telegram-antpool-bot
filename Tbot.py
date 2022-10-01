@@ -109,7 +109,7 @@ def sub_overview_command(update: Update, context: CallbackContext) -> None:
         account_ovv = account_ovv['data']
         coin = context.user_data['coin_type']
         update.message.reply_markdown_v2(f'__{context.user_data["sign_id"]} overview:__\n*Unpaid Amount: *{account_ovv["unpaidAmount"]} _{coin}_\n*Yesterday Earnings: *{account_ovv["yesterdayAmount"]} _{coin}_\n*Total earnings: *{account_ovv["totalAmount"]} _{coin}_\n*Hashrate\[daily\]: *{account_ovv["hsLast1d"]}\n*Hashrate\[1h\]: *{account_ovv["hsLast1h"]}\n*Hashrate\[10m\]: *{account_ovv["hsLast10m"]}\n*Active Workers: *{account_ovv["activeWorkerNum"]}\n*Inactive Workers: *{account_ovv["inactiveWorkerNum"]}',
-        reply_markup=ReplyKeyboardMarkup(commands_reply_keyboard, one_time_keyboard=True, resize_keyboard=True))
+                                         reply_markup=ReplyKeyboardMarkup(commands_reply_keyboard, one_time_keyboard=True, resize_keyboard=True))
     else:
         update.message.reply_text(
             'Ups\! Request error encountered\. Check your settings and try again\!')
@@ -127,8 +127,11 @@ def cancel(update: Update, context: CallbackContext) -> int:
 def main() -> None:
     """Start the bot."""
     # Create the Updater and pass it your bot's token.
+    TOKEN = os.environ["BOT_TOKEN"]
+    NAME = os.environ["APP_NAME"]
+    PORT = os.environ["PORT"]
     persistence_file = PicklePersistence(filename='bot_data/storedData')
-    updater = Updater(os.environ["BOT_TOKEN"], persistence=persistence_file)
+    updater = Updater(TOKEN, persistence=persistence_file)
     # Get the dispatcher to register handlers
     dispatcher = updater.dispatcher
 
@@ -158,7 +161,10 @@ def main() -> None:
     # dispatcher.add_handler(CommandHandler("user",stored_settings_commands))
 
     # Start the Bot
-    updater.start_polling()
+    updater.start_webhook(listen="0.0.0.0",
+                          port=int(PORT),
+                          url_path=TOKEN,
+                          webhook_url=f"https://{NAME}.herokuapp.com/{TOKEN}")
 
     # Run the bot until you press Ctrl-C or the process receives SIGINT,
     # SIGTERM or SIGABRT. This should be used most of the time, since

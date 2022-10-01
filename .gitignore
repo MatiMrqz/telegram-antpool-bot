@@ -209,3 +209,5 @@ cython_debug/
 bot_data/*
 #exception
 !bot_data/.gitkeep
+
+example.py
