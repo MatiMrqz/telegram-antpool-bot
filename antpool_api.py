@@ -1,7 +1,6 @@
 import time
 import hmac
 import hashlib
-import ssl
 import requests
 # coin_type = 'BTC'
 # sign_id = 'matimrqz'
