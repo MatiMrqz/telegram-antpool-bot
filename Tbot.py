@@ -129,7 +129,7 @@ def main() -> None:
     # Create the Updater and pass it your bot's token.
     TOKEN = os.environ["BOT_TOKEN"]
     NAME = os.environ["APP_NAME"]
-    PORT = os.environ["PORT"]
+    PORT = int(os.environ.get('PORT', '8443'))
     persistence_file = PicklePersistence(filename='bot_data/storedData')
     updater = Updater(TOKEN, persistence=persistence_file)
     # Get the dispatcher to register handlers
@@ -162,7 +162,7 @@ def main() -> None:
 
     # Start the Bot
     updater.start_webhook(listen="0.0.0.0",
-                          port=int(PORT),
+                          port=PORT,
                           url_path=TOKEN,
                           webhook_url=f"https://{NAME}.herokuapp.com/{TOKEN}")
 
